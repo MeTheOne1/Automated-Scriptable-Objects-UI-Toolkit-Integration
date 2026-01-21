@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "BindingAsset", menuName = "Scriptable Objects/BindingAsset")]
@@ -12,5 +10,5 @@ public class BindingAsset : ScriptableObject
     public string ChangeLanguageButton;
 
     public string DropDownSample;
-    public string DropDownLabel;
+    
 }
