@@ -5,6 +5,7 @@ Requirements:
 •	Unity UI from Package Manager (tested with 2.0.0) - and a UI of course
 •	Localization from Package Manager (tested with 1.5.9)
 •	Setup the Localization and create a localization table. (Quick Start Guide | Localization | 1.5.9)
+•	Set the String Database Default Table Reference in Project Setting -> Localization
 •	Adapt the FieldNames in the SampleBindingAsset Script to your UI Element Names and create a Binding Asset Scriptable Object from it. 
 •	Create a GameObject and attach the UIManager Script and the Binding Asset Scriptable Object in the Inspector.
 
