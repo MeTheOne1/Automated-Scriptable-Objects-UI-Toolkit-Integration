@@ -8,8 +8,6 @@ using System.Linq;
 using System.Collections.Generic;
 using System;
 
-
-
 public class UIManager : MonoBehaviour
 {
     [SerializeField] private ScriptableObject bindingAsset;
@@ -26,13 +24,19 @@ public class UIManager : MonoBehaviour
         StartCoroutine(SetLangaugeIndex());
         LocalizationSettings.SelectedLocaleChanged += OnLanguageChanged;
 
-        // Initialize Bindings - lookup all uiElemts with names matching the field names in the binding asset
+        // Initialize Bindings - loop through all fieldnames in the Binding Asset for matching UI Elements
+        // The SO field name is also used as key to lookup the localized string
+        // Multiple values (e.g. Dropdown options) have to be comma separated in the localized string
+        // no need to bind the TextElements in the UI Toolkit - they are updated in OnLanguageChanged
+        // but you can bind them if needed cause the SO field is also updated
+    
         foreach (FieldInfo uiElement in uiElements)
         {
             var root = GetComponent<UIDocument>().rootVisualElement;
             var button = root.Q<Button>(uiElement.Name);
             if(button != null)
             {
+                // subscribe to clicked event and add action to unsubscribe list
                 button.clicked += () => {StartCoroutine("On" + uiElement.Name); };
                 unsubscribeCallbacks.Add(() => button.clicked -= () => {StartCoroutine("On" + uiElement.Name); });
                 continue;
@@ -45,12 +49,12 @@ public class UIManager : MonoBehaviour
                 choises.RemoveAt(0);
                 dropDown.SetValueWithoutNotify(choises[0]);
                 dropDown.choices = choises;
-                // subscribe to value changed event 
+                // subscribe to value changed event and add action to unsubscribe list
                 dropDown.RegisterValueChangedCallback(v => StartCoroutine("On" + uiElement.Name, v.newValue)); 
                 unsubscribeCallbacks.Add(() => dropDown.UnregisterValueChangedCallback(v => StartCoroutine("On" + uiElement.Name, v.newValue)));
                 continue;
             }
-            //Debug.Log("Binding Button: " + field.Name); 
+            //Debug.Log("Binding Button: " + uiElement.Name); 
         }
     }
 
@@ -65,6 +69,7 @@ public class UIManager : MonoBehaviour
     }
     private IEnumerator SetLangaugeIndex()
     {
+        // get the current language index
         yield return LocalizationSettings.InitializationOperation;
         languageIndex = LocalizationSettings.AvailableLocales.Locales.IndexOf(LocalizationSettings.SelectedLocale);
         OnLanguageChanged(LocalizationSettings.SelectedLocale);
@@ -72,6 +77,7 @@ public class UIManager : MonoBehaviour
 
     private void OnLanguageChanged(Locale newLocale)
     {
+        // loop through all fields in the binding asset and update the UIElemts and the SO value from the localized strings
         foreach (FieldInfo uiElement in uiElements)
         {
             uiElement.SetValue(bindingAsset, LocalizationSettings.StringDatabase.GetLocalizedString(uiElement.Name));
@@ -101,7 +107,7 @@ public class UIManager : MonoBehaviour
     private IEnumerator OnChangeLanguageButton()
     {
         yield return LocalizationSettings.InitializationOperation;
-        //  yield return LocalizationSettings.StringDatabase.PreloadOperation;
+        //  yield return LocalizationSettings.StringDatabase.PreloadOperation; // maybe needed in some cases
         languageIndex++;
         if (languageIndex >= LocalizationSettings.AvailableLocales.Locales.Count)
         {
