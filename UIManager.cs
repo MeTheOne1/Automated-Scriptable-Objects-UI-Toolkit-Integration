@@ -8,18 +8,21 @@ using System.Linq;
 using System.Collections.Generic;
 using System;
 
+
 public class UIManager : MonoBehaviour
 {
     [SerializeField] private ScriptableObject bindingAsset;
     private FieldInfo[] uiElements;
     private int languageIndex;
     private List<Action> unsubscribeCallbacks = new List<Action>();
+
+
     
     void OnEnable()
     {
         // Lookup all Fields in the binding asset 
         uiElements = bindingAsset.GetType().GetFields();
-
+       
         // Initialize localization settings
         StartCoroutine(SetLangaugeIndex());
         LocalizationSettings.SelectedLocaleChanged += OnLanguageChanged;
@@ -36,22 +39,24 @@ public class UIManager : MonoBehaviour
             var button = root.Q<Button>(uiElement.Name);
             if(button != null)
             {
+                // set button text from localized string
+                button.text = LocalizationSettings.StringDatabase.GetLocalizedString(uiElement.Name);
                 // subscribe to clicked event and add action to unsubscribe list
-                button.clicked += () => {StartCoroutine("On" + uiElement.Name); };
-                unsubscribeCallbacks.Add(() => button.clicked -= () => {StartCoroutine("On" + uiElement.Name); });
+                Action actiontoAdd = () => StartCoroutine("On" + uiElement.Name);
+                button.clicked += actiontoAdd;
+                unsubscribeCallbacks.Add(() => button.clicked -= actiontoAdd);
+
                 continue;
             }
             var dropDown = root.Q<DropdownField>(uiElement.Name);
             if(dropDown != null)
             {
-                List<string> choises = LocalizationSettings.StringDatabase.GetLocalizedString(uiElement.Name).Split(',').ToList();
-                dropDown.label = choises[0];
-                choises.RemoveAt(0);
-                dropDown.SetValueWithoutNotify(choises[0]);
-                dropDown.choices = choises;
-                // subscribe to value changed event and add action to unsubscribe list
-                dropDown.RegisterValueChangedCallback(v => StartCoroutine("On" + uiElement.Name, v.newValue)); 
-                unsubscribeCallbacks.Add(() => dropDown.UnregisterValueChangedCallback(v => StartCoroutine("On" + uiElement.Name, v.newValue)));
+                // set dropdown label and choices from localized string
+                SetDropDownValues(dropDown, uiElement.Name);
+                //subscribe to value changed event and add action to unsubscribe list
+                Action action = () => StartCoroutine("On" + uiElement.Name, dropDown.value);
+                dropDown.RegisterValueChangedCallback(v => action()); 
+                unsubscribeCallbacks.Add(() => dropDown.UnregisterValueChangedCallback(v => action()));
                 continue;
             }
             //Debug.Log("Binding Button: " + uiElement.Name); 
@@ -60,12 +65,16 @@ public class UIManager : MonoBehaviour
 
     void OnDisable()
     {
+        // actually unsubscribing from DropDowns with UnregisterValueChangedCallback does not work. Actions are not a valid reference
+        // maybe in the futrue unity will provide a way to unregister all callbacks. 
         LocalizationSettings.SelectedLocaleChanged -= OnLanguageChanged;
         foreach(var unsubscribe in unsubscribeCallbacks)
         {
             unsubscribe();
+            Debug.Log("Unsubscribed a callback");
         }
         unsubscribeCallbacks.Clear();
+      
     }
     private IEnumerator SetLangaugeIndex()
     {
@@ -75,9 +84,20 @@ public class UIManager : MonoBehaviour
         OnLanguageChanged(LocalizationSettings.SelectedLocale);
     }
 
+    private void SetDropDownValues(DropdownField dropdown, string fieldName)
+    {
+        string localizedString = LocalizationSettings.StringDatabase.GetLocalizedString(fieldName);
+        List<string> choises = localizedString.Split(',').ToList();
+        dropdown.label = choises[0];
+        choises.RemoveAt(0);
+        dropdown.SetValueWithoutNotify(choises[0]);
+        dropdown.choices = choises;
+    }
+
     private void OnLanguageChanged(Locale newLocale)
     {
         // loop through all fields in the binding asset and update the UIElemts and the SO value from the localized strings
+        Debug.Log("Language changed to: " + newLocale.Identifier.Code);
         foreach (FieldInfo uiElement in uiElements)
         {
             uiElement.SetValue(bindingAsset, LocalizationSettings.StringDatabase.GetLocalizedString(uiElement.Name));
@@ -92,20 +112,17 @@ public class UIManager : MonoBehaviour
             var dropdown = root.Q<DropdownField>(uiElement.Name);
             if(dropdown != null)
             {
-                List<string> choises = LocalizationSettings.StringDatabase.GetLocalizedString(uiElement.Name).Split(',').ToList();
-
-                int actualIndex = dropdown.choices.IndexOf(dropdown.value);
-                dropdown.label = choises[0];
-                choises.RemoveAt(0);
-                
-                dropdown.SetValueWithoutNotify(choises[actualIndex]);
-                dropdown.choices = choises;
+                SetDropDownValues(dropdown, uiElement.Name);
             } 
         }
     }
 
+    
+    #region UI Callbacks
+    // Example UI Callbacks - add your own here matching the field names in the Binding Asset with "On" prefix
     private IEnumerator OnChangeLanguageButton()
     {
+        Debug.Log("OnChangeLanguageButton clicked");
         yield return LocalizationSettings.InitializationOperation;
         //  yield return LocalizationSettings.StringDatabase.PreloadOperation; // maybe needed in some cases
         languageIndex++;
@@ -118,7 +135,10 @@ public class UIManager : MonoBehaviour
     }
     private IEnumerator OnDropDownSample(string newValue)
     {
-        yield return null;
         Debug.Log("Selected value: " + newValue);
+        yield return null;
+        
     }
+
+    #endregion
 }

@@ -1,27 +1,12 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI/UI.uss?fileID=7433441132597879392&amp;guid=a8ed964e04337da47b8bcce3ecf70f37&amp;type=3#UI"/>
-    <ui:VisualElement name="root" class="main" style="border-top-width: 0; border-top-left-radius: 8px; border-top-right-radius: 8px; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; position: relative; top: 50%; left: 50%; width: 300px; height: 300px; align-content: stretch;">
+    <ui:VisualElement name="root" class="main" style="border-top-width: 0; border-top-left-radius: 8px; border-top-right-radius: 8px; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; position: relative; top: 50%; left: 50%; width: 300px; height: 170px; align-content: stretch;">
         <ui:Label text="Label" data-source="" triple-click-selects-line="false" double-click-selects-word="false" selectable="true" focusable="true" name="LanguageLabel" style="font-size: 40px; color: rgb(221, 149, 149);">
             <Bindings>
                 <ui:DataBinding property="text" data-source-path="Label" binding-mode="ToTarget"/>
             </Bindings>
         </ui:Label>
-        <ui:VisualElement name="Top" style="flex-grow: 1; width: 300px; height: 300px;">
-            <ui:VisualElement name="FlexBox" style="flex-grow: 1; flex-basis: 50%; flex-wrap: wrap; flex-direction: column;">
-                <ui:Image style="width: 30px; height: 30px; margin-top: 5px; margin-left: 5px; margin-right: 5px; margin-bottom: 5px; background-image: url(&quot;project://database/Assets/Dark_Brown_GUI_kit/icon/full_simple/numbers/1.png?fileID=2800000&amp;guid=af88e637281e9a548aa31d1cb76a0486&amp;type=3#1&quot;);"/>
-                <ui:Image style="width: 30px; height: 30px; margin-top: 5px; margin-left: 5px; margin-right: 5px; margin-bottom: 5px; background-image: url(&quot;project://database/Assets/Dark_Brown_GUI_kit/icon/full_simple/numbers/1.png?fileID=2800000&amp;guid=af88e637281e9a548aa31d1cb76a0486&amp;type=3#1&quot;);"/>
-                <ui:Image style="width: 30px; height: 30px; margin-top: 5px; margin-left: 5px; margin-right: 5px; margin-bottom: 5px; background-image: url(&quot;project://database/Assets/Dark_Brown_GUI_kit/icon/full_simple/numbers/1.png?fileID=2800000&amp;guid=af88e637281e9a548aa31d1cb76a0486&amp;type=3#1&quot;);"/>
-                <ui:Image style="width: 30px; height: 30px; margin-top: 5px; margin-left: 5px; margin-right: 5px; margin-bottom: 5px; background-image: url(&quot;project://database/Assets/Dark_Brown_GUI_kit/icon/full_simple/numbers/1.png?fileID=2800000&amp;guid=af88e637281e9a548aa31d1cb76a0486&amp;type=3#1&quot;);"/>
-                <ui:Image style="width: 30px; height: 30px; margin-top: 5px; margin-left: 5px; margin-right: 5px; margin-bottom: 5px; background-image: url(&quot;project://database/Assets/Dark_Brown_GUI_kit/icon/full_simple/numbers/1.png?fileID=2800000&amp;guid=af88e637281e9a548aa31d1cb76a0486&amp;type=3#1&quot;);"/>
-                <ui:Image style="width: 30px; height: 30px; margin-top: 5px; margin-left: 5px; margin-right: 5px; margin-bottom: 5px; background-image: url(&quot;project://database/Assets/Dark_Brown_GUI_kit/icon/full_simple/numbers/1.png?fileID=2800000&amp;guid=af88e637281e9a548aa31d1cb76a0486&amp;type=3#1&quot;);"/>
-                <ui:Image style="width: 30px; height: 30px; margin-top: 5px; margin-left: 5px; margin-right: 5px; margin-bottom: 5px; background-image: url(&quot;project://database/Assets/Dark_Brown_GUI_kit/icon/full_simple/numbers/1.png?fileID=2800000&amp;guid=af88e637281e9a548aa31d1cb76a0486&amp;type=3#1&quot;);"/>
-                <ui:Image style="width: 30px; height: 30px; margin-top: 5px; margin-left: 5px; margin-right: 5px; margin-bottom: 5px; background-image: url(&quot;project://database/Assets/Dark_Brown_GUI_kit/icon/full_simple/numbers/1.png?fileID=2800000&amp;guid=af88e637281e9a548aa31d1cb76a0486&amp;type=3#1&quot;);"/>
-                <ui:Image style="width: 30px; height: 30px; margin-top: 5px; margin-left: 5px; margin-right: 5px; margin-bottom: 5px; background-image: url(&quot;project://database/Assets/Dark_Brown_GUI_kit/icon/full_simple/numbers/1.png?fileID=2800000&amp;guid=af88e637281e9a548aa31d1cb76a0486&amp;type=3#1&quot;);"/>
-                <ui:Image style="width: 30px; height: 30px; margin-top: 5px; margin-left: 5px; margin-right: 5px; margin-bottom: 5px; background-image: url(&quot;project://database/Assets/Dark_Brown_GUI_kit/icon/full_simple/numbers/1.png?fileID=2800000&amp;guid=af88e637281e9a548aa31d1cb76a0486&amp;type=3#1&quot;);"/>
-                <ui:Image style="width: 30px; height: 30px; margin-top: 5px; margin-left: 5px; margin-right: 5px; margin-bottom: 5px; background-image: url(&quot;project://database/Assets/Dark_Brown_GUI_kit/icon/full_simple/numbers/1.png?fileID=2800000&amp;guid=af88e637281e9a548aa31d1cb76a0486&amp;type=3#1&quot;);"/>
-            </ui:VisualElement>
-            <ui:Button text="Button" name="ChangeLanguageButton"/>
-            <ui:DropdownField label="DropDownLabel" choices=",," name="DropDownSample" style="color: rgb(224, 224, 224); font-size: 20px;"/>
-        </ui:VisualElement>
+        <ui:Button name="ChangeLanguageButton" text="Button"/>
+        <ui:DropdownField name="DropDownSample" label="DropDown" style="color: rgb(224, 224, 224); font-size: 20px;"/>
     </ui:VisualElement>
 </ui:UXML>
